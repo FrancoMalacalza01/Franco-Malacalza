@@ -1,0 +1,48 @@
+table Insumo
+
+	column InsumoID
+		dataType: int64
+		isNameInferred
+		isDataTypeInferred
+		isHidden
+		summarizeBy: none
+		sourceColumn: [InsumoID]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Insumo
+		dataType: string
+		isNameInferred
+		isDataTypeInferred
+		summarizeBy: none
+		sourceColumn: [Insumo]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Tipo de Insumo'
+		dataType: string
+		isNameInferred
+		isDataTypeInferred
+		summarizeBy: none
+		sourceColumn: [Tipo de Insumo]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Insumo = calculated
+		mode: import
+		source = ```
+			DATATABLE(
+			    "InsumoID", INTEGER,
+			    "Insumo", STRING,
+			    "Tipo de Insumo", STRING,
+			    {
+			        { 1, "Polipropileno (PP)", "Resina" },
+			        { 2, "Polietileno AD (HDPE)", "Resina" },
+			        { 3, "Masterbatch Color", "Aditivo" },
+			        { 4, "Etiqueta IML", "Packaging" },
+			        { 5, "Film Stretch", "Packaging" }
+			    }
+			)
+			```
+
+	annotation PBI_ResultType = Table

@@ -1,0 +1,20 @@
+{
+  "config": "{\"version\": \"5.55\", \"activeSectionIndex\": 0}",
+  "layoutOptimization": 0,
+  "publicCustomVisuals": [],
+  "resourcePackages": [],
+  "sections": [
+    {
+      "name": "ResumenSection",
+      "displayName": "Resumen",
+      "filters": "[]",
+      "ordinal": 0,
+      "visualContainers": [],
+      "config": "{}",
+      "displayOption": 1,
+      "width": 1280,
+      "height": 720
+    }
+  ],
+  "filters": "[]"
+}

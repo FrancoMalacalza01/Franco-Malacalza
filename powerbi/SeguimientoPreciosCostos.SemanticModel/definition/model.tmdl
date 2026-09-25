@@ -1,0 +1,18 @@
+model Model
+	culture: es-AR
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: es-AR
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation PBI_QueryOrder = []
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table Calendario
+ref table Producto
+ref table Insumo
+ref table BOM
+ref table PrecioInsumo
+ref table Ventas

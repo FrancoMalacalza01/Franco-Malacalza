@@ -1,0 +1,64 @@
+table BOM
+
+	column ProductoID
+		dataType: int64
+		isNameInferred
+		isDataTypeInferred
+		isHidden
+		summarizeBy: none
+		sourceColumn: [ProductoID]
+
+		annotation SummarizationSetBy = Automatic
+
+	column InsumoID
+		dataType: int64
+		isNameInferred
+		isDataTypeInferred
+		isHidden
+		summarizeBy: none
+		sourceColumn: [InsumoID]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Cantidad por Unidad'
+		dataType: double
+		isNameInferred
+		isDataTypeInferred
+		formatString: #,0.0000
+		summarizeBy: sum
+		sourceColumn: [Cantidad por Unidad]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition BOM = calculated
+		mode: import
+		source = ```
+			DATATABLE(
+			    "ProductoID", INTEGER,
+			    "InsumoID", INTEGER,
+			    "Cantidad por Unidad", DOUBLE,
+			    {
+			        { 1, 1, 0.42 },
+			        { 1, 3, 0.012 },
+			        { 1, 4, 1.0 },
+			        { 1, 5, 0.004 },
+			        { 2, 1, 0.78 },
+			        { 2, 3, 0.02 },
+			        { 2, 4, 1.0 },
+			        { 2, 5, 0.006 },
+			        { 3, 2, 0.22 },
+			        { 3, 3, 0.008 },
+			        { 3, 5, 0.003 },
+			        { 4, 2, 0.38 },
+			        { 4, 3, 0.012 },
+			        { 4, 5, 0.004 },
+			        { 5, 1, 1.85 },
+			        { 5, 3, 0.045 },
+			        { 5, 5, 0.01 },
+			        { 6, 1, 0.09 },
+			        { 6, 3, 0.003 }
+			    }
+			)
+			```
+
+	annotation PBI_ResultType = Table

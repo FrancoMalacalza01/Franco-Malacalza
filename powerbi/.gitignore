@@ -1,0 +1,5 @@
+# Archivos locales que genera Power BI Desktop
+*.SemanticModel/.pbi/localSettings.json
+*.Report/.pbi/localSettings.json
+*.Report/StaticResources/RegisteredResources/
+*.abf

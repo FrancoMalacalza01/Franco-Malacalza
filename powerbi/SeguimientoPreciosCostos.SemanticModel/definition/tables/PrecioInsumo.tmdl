@@ -1,0 +1,62 @@
+table PrecioInsumo
+
+	column Fecha
+		dataType: dateTime
+		isNameInferred
+		isDataTypeInferred
+		isHidden
+		formatString: General Date
+		summarizeBy: none
+		sourceColumn: [Fecha]
+
+		annotation SummarizationSetBy = Automatic
+
+	column InsumoID
+		dataType: int64
+		isNameInferred
+		isDataTypeInferred
+		isHidden
+		summarizeBy: none
+		sourceColumn: [InsumoID]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Precio Unitario'
+		dataType: double
+		isNameInferred
+		isDataTypeInferred
+		formatString: \$#,0.0000
+		summarizeBy: none
+		sourceColumn: [Precio Unitario]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition PrecioInsumo = calculated
+		mode: import
+		source = ```
+			VAR _meses = GENERATESERIES(0, 23)
+			RETURN
+			SELECTCOLUMNS(
+			    CROSSJOIN(_meses, Insumo),
+			    "Fecha", EOMONTH(DATE(2024, 1, 1), [Value]),
+			    "InsumoID", [InsumoID],
+			    "Precio Unitario",
+			        VAR _idx = [Value]
+			        VAR _base =
+			            SWITCH(
+			                [InsumoID],
+			                1, 1.45,
+			                2, 1.32,
+			                3, 4.80,
+			                4, 0.085,
+			                5, 2.10,
+			                1.00
+			            )
+			        VAR _tendencia = 1 + 0.008 * _idx
+			        VAR _ruido = 1 + ( MOD( _idx * 7 + [InsumoID] * 13, 9 ) - 4 ) / 100
+			        RETURN
+			            ROUND( _base * _tendencia * _ruido, 4 )
+			)
+			```
+
+	annotation PBI_ResultType = Table

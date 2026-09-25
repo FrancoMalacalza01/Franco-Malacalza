@@ -1,0 +1,192 @@
+table Ventas
+
+	column Fecha
+		dataType: dateTime
+		isNameInferred
+		isDataTypeInferred
+		isHidden
+		formatString: General Date
+		summarizeBy: none
+		sourceColumn: [Fecha]
+
+		annotation SummarizationSetBy = Automatic
+
+	column ProductoID
+		dataType: int64
+		isNameInferred
+		isDataTypeInferred
+		isHidden
+		summarizeBy: none
+		sourceColumn: [ProductoID]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Cantidad
+		dataType: int64
+		isNameInferred
+		isDataTypeInferred
+		formatString: #,0
+		summarizeBy: sum
+		sourceColumn: [Cantidad]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Precio Unitario de Venta'
+		dataType: double
+		isNameInferred
+		isDataTypeInferred
+		formatString: \$#,0.0000
+		summarizeBy: none
+		sourceColumn: [Precio Unitario de Venta]
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Unidades vendidas en el contexto de filtro actual.
+	measure 'Cantidad Vendida' = SUM(Ventas[Cantidad])
+		formatString: #,0
+		displayFolder: 01 Volumen
+
+	/// Facturación = cantidad por precio unitario de venta.
+	measure Ingresos = SUMX( Ventas, Ventas[Cantidad] * Ventas[Precio Unitario de Venta] )
+		formatString: \$#,0
+		displayFolder: 02 Precios e Ingresos
+
+	/// Precio medio ponderado por volumen; no es un promedio simple de la lista.
+	measure 'Precio Promedio Ponderado' = DIVIDE( [Ingresos], [Cantidad Vendida] )
+		formatString: \$#,0.00
+		displayFolder: 02 Precios e Ingresos
+
+	/// Costo de materia prima por unidad, explotando el BOM contra el precio del insumo del período. Requiere un único producto en contexto.
+	measure 'Costo MP Unitario' = ```
+			IF(
+			    HASONEVALUE( Producto[ProductoID] ),
+			    SUMX(
+			        BOM,
+			        VAR _insumo = BOM[InsumoID]
+			        VAR _precio =
+			            CALCULATE(
+			                AVERAGE( PrecioInsumo[Precio Unitario] ),
+			                Insumo[InsumoID] = _insumo
+			            )
+			        RETURN
+			            BOM[Cantidad por Unidad] * _precio
+			    )
+			)
+			```
+		formatString: \$#,0.0000
+		displayFolder: 03 Costos
+
+	/// Costo de materia prima total; itera producto por producto para ser correcto en cualquier granularidad.
+	measure 'Costo MP Total' = ```
+			SUMX(
+			    VALUES( Producto[ProductoID] ),
+			    [Cantidad Vendida] * [Costo MP Unitario]
+			)
+			```
+		formatString: \$#,0
+		displayFolder: 03 Costos
+
+	measure 'Margen Bruto' = [Ingresos] - [Costo MP Total]
+		formatString: \$#,0
+		displayFolder: 04 Márgenes
+
+	measure 'Margen Bruto %' = DIVIDE( [Margen Bruto], [Ingresos] )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: 04 Márgenes
+
+	measure 'Ingresos Mes Anterior' = CALCULATE( [Ingresos], DATEADD( Calendario[Date], -1, MONTH ) )
+		formatString: \$#,0
+		displayFolder: 05 Variaciones
+
+	measure 'Var. Ingresos MoM %' = ```
+			DIVIDE(
+			    [Ingresos] - [Ingresos Mes Anterior],
+			    [Ingresos Mes Anterior]
+			)
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: 05 Variaciones
+
+	measure 'Var. Precio MoM %' = ```
+			VAR _anterior =
+			    CALCULATE( [Precio Promedio Ponderado], DATEADD( Calendario[Date], -1, MONTH ) )
+			RETURN
+			    DIVIDE( [Precio Promedio Ponderado] - _anterior, _anterior )
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: 05 Variaciones
+
+	measure 'Var. Costo MP MoM %' = ```
+			VAR _anterior =
+			    CALCULATE( [Costo MP Total], DATEADD( Calendario[Date], -1, MONTH ) )
+			RETURN
+			    DIVIDE( [Costo MP Total] - _anterior, _anterior )
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: 05 Variaciones
+
+	measure 'Ingresos YTD' = TOTALYTD( [Ingresos], Calendario[Date] )
+		formatString: \$#,0
+		displayFolder: 06 Acumulados
+
+	/// Evolución del precio promedio con base 100 en enero de 2024.
+	measure 'Índice de Precio (Base Ene-24)' = ```
+			VAR _base =
+			    CALCULATE(
+			        [Precio Promedio Ponderado],
+			        REMOVEFILTERS( Calendario ),
+			        Calendario[Año-Mes] = "2024-01"
+			    )
+			RETURN
+			    DIVIDE( [Precio Promedio Ponderado], _base ) * 100
+			```
+		formatString: #,0.0
+		displayFolder: 06 Acumulados
+
+	partition Ventas = calculated
+		mode: import
+		source = ```
+			VAR _meses = GENERATESERIES(0, 23)
+			RETURN
+			SELECTCOLUMNS(
+			    CROSSJOIN(_meses, Producto),
+			    "Fecha", EOMONTH(DATE(2024, 1, 1), [Value]),
+			    "ProductoID", [ProductoID],
+			    "Cantidad",
+			        VAR _idx = [Value]
+			        VAR _base =
+			            SWITCH(
+			                [ProductoID],
+			                1, 12000,
+			                2, 8000,
+			                3, 15000,
+			                4, 9000,
+			                5, 4000,
+			                6, 30000,
+			                5000
+			            )
+			        VAR _tendencia = 1 + 0.004 * _idx
+			        VAR _estacional = 1 + ( MOD( _idx * 5 + [ProductoID] * 11, 13 ) - 6 ) / 100
+			        RETURN
+			            INT( ROUND( _base * _tendencia * _estacional, 0 ) ),
+			    "Precio Unitario de Venta",
+			        VAR _i = [Value]
+			        VAR _pbase =
+			            SWITCH(
+			                [ProductoID],
+			                1, 3.10,
+			                2, 5.20,
+			                3, 1.95,
+			                4, 2.85,
+			                5, 12.50,
+			                6, 0.62,
+			                1.00
+			            )
+			        VAR _tendencia = 1 + 0.009 * _i
+			        VAR _ruido = 1 + ( MOD( _i * 3 + [ProductoID] * 17, 7 ) - 3 ) / 100
+			        RETURN
+			            ROUND( _pbase * _tendencia * _ruido, 4 )
+			)
+			```
+
+	annotation PBI_ResultType = Table

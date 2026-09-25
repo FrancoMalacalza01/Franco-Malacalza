@@ -1,0 +1,59 @@
+table Producto
+
+	column ProductoID
+		dataType: int64
+		isNameInferred
+		isDataTypeInferred
+		isHidden
+		summarizeBy: none
+		sourceColumn: [ProductoID]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Producto
+		dataType: string
+		isNameInferred
+		isDataTypeInferred
+		summarizeBy: none
+		sourceColumn: [Producto]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Familia
+		dataType: string
+		isNameInferred
+		isDataTypeInferred
+		summarizeBy: none
+		sourceColumn: [Familia]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Unidad de Medida'
+		dataType: string
+		isNameInferred
+		isDataTypeInferred
+		summarizeBy: none
+		sourceColumn: [Unidad de Medida]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Producto = calculated
+		mode: import
+		source = ```
+			DATATABLE(
+			    "ProductoID", INTEGER,
+			    "Producto", STRING,
+			    "Familia", STRING,
+			    "Unidad de Medida", STRING,
+			    {
+			        { 1, "Balde 10 L", "Baldes", "Unidad" },
+			        { 2, "Balde 20 L", "Baldes", "Unidad" },
+			        { 3, "Bidón 5 L", "Bidones", "Unidad" },
+			        { 4, "Bidón 10 L", "Bidones", "Unidad" },
+			        { 5, "Cajón Cosechero", "Cajones", "Unidad" },
+			        { 6, "Tapa 120 mm", "Tapas", "Unidad" }
+			    }
+			)
+			```
+
+	annotation PBI_ResultType = Table

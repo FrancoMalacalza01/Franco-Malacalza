@@ -1,0 +1,23 @@
+relationship Ventas_Calendario
+	fromColumn: Ventas.Fecha
+	toColumn: Calendario.Date
+
+relationship Ventas_Producto
+	fromColumn: Ventas.ProductoID
+	toColumn: Producto.ProductoID
+
+relationship PrecioInsumo_Calendario
+	fromColumn: PrecioInsumo.Fecha
+	toColumn: Calendario.Date
+
+relationship PrecioInsumo_Insumo
+	fromColumn: PrecioInsumo.InsumoID
+	toColumn: Insumo.InsumoID
+
+relationship BOM_Producto
+	fromColumn: BOM.ProductoID
+	toColumn: Producto.ProductoID
+
+relationship BOM_Insumo
+	fromColumn: BOM.InsumoID
+	toColumn: Insumo.InsumoID
