@@ -1,0 +1,119 @@
+table Masa
+
+	column Orden
+		dataType: int64
+		isNameInferred
+		isDataTypeInferred
+		isHidden
+		summarizeBy: none
+		sourceColumn: [Orden]
+
+		annotation SummarizationSetBy = Automatic
+
+	column PROCESO
+		dataType: string
+		isNameInferred
+		isDataTypeInferred
+		sortByColumn: Orden
+		summarizeBy: none
+		sourceColumn: [PROCESO]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'ENTRADA (kg/h)'
+		dataType: double
+		isNameInferred
+		isDataTypeInferred
+		formatString: #,0.00
+		summarizeBy: sum
+		sourceColumn: [ENTRADA (kg/h)]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'SE AGREGA (kg/h)'
+		dataType: double
+		isNameInferred
+		isDataTypeInferred
+		formatString: #,0.00
+		summarizeBy: sum
+		sourceColumn: [SE AGREGA (kg/h)]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'SE RETIRA (kg/h)'
+		dataType: double
+		isNameInferred
+		isDataTypeInferred
+		formatString: #,0.0000
+		summarizeBy: sum
+		sourceColumn: [SE RETIRA (kg/h)]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'SALIDA (kg/h)'
+		dataType: double
+		isNameInferred
+		isDataTypeInferred
+		formatString: #,0.00
+		summarizeBy: sum
+		sourceColumn: [SALIDA (kg/h)]
+
+		annotation SummarizationSetBy = Automatic
+
+	column DETALLE
+		dataType: string
+		isNameInferred
+		isDataTypeInferred
+		summarizeBy: none
+		sourceColumn: [DETALLE]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'SALIDA (t/día)'
+		dataType: double
+		isNameInferred
+		isDataTypeInferred
+		formatString: #,0.00
+		summarizeBy: sum
+		sourceColumn: [SALIDA (t/día)]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'RETIRO / ENTRADA'
+		dataType: double
+		isNameInferred
+		isDataTypeInferred
+		formatString: 0.00%
+		summarizeBy: none
+		sourceColumn: [RETIRO / ENTRADA]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Masa = calculated
+		mode: import
+		source = ```
+			DATATABLE(
+			    "Orden", INTEGER,
+			    "PROCESO", STRING,
+			    "ENTRADA (kg/h)", DOUBLE,
+			    "SE AGREGA (kg/h)", DOUBLE,
+			    "SE RETIRA (kg/h)", DOUBLE,
+			    "SALIDA (kg/h)", DOUBLE,
+			    "DETALLE", STRING,
+			    "SALIDA (t/día)", DOUBLE,
+			    "RETIRO / ENTRADA", DOUBLE,
+			    {
+			        { 1, "Recepción e inspección EL de celdas", 24.4492858871944, 0.0, 0.242072137496974, 24.2072137496974, "Celdas rotas descartadas", 0.493827160493827, 0.0099009900990099 },
+			        { 2, "Soldadura de celdas (PRO-01)", 24.2072137496974, 9.35003631082063, 0.272331154684096, 33.2849189058339, "Entra ribbon de cobre; sale recorte de cinta", 0.679012345679013, 0.01125 },
+			        { 3, "Apilado del sándwich (PRO-02)", 33.2849189058339, 729.862624061971, 3.1318082788671, 760.015734688937, "Entran vidrio, EVA y backsheet; sale vidrio roto", 15.5043209876543, 0.0940909090909091 },
+			        { 4, "Laminado al vacío (PRO-03)", 760.015734688937, 0.0, 0.0, 760.015734688937, "Reticulación del EVA: no hay pérdida de masa", 15.5043209876543, 0.0 },
+			        { 5, "Recorte de bordes", 760.015734688937, 0.0, 6.56620672960542, 753.449527959332, "Rebaba perimetral de EVA y backsheet", 15.3703703703704, 0.00863956682724848 },
+			        { 6, "Marco y caja de conexión (PRO-04)", 753.449527959332, 94.8317598644396, 1.02880658436214, 847.25248123941, "Entran marco y J-box; sale recorte de perfil y silicona", 17.283950617284, 0.00136546184738956 },
+			        { 7, "Curado", 847.25248123941, 0.0, 0.0, 847.25248123941, "Curado de silicona (240 posiciones), sin pérdida de masa", 17.283950617284, 0.0 },
+			        { 8, "Ensayo STC y EL final (RED-01)", 847.25248123941, 0.0, 0.0, 847.25248123941, "2% de rechazo que vuelve a reproceso", 17.283950617284, 0.0 },
+			        { 9, "Clasificación y empaque (RED-02)", 847.25248123941, 30.2590171871218, 0.0, 877.511498426531, "Entra pallet, esquineros y film", 17.9012345679012, 0.0 }
+			    }
+			)
+			```
+
+	annotation PBI_ResultType = Table

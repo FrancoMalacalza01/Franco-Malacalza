@@ -1,0 +1,97 @@
+table Materiales
+
+	column Orden
+		dataType: int64
+		isNameInferred
+		isDataTypeInferred
+		isHidden
+		summarizeBy: none
+		sourceColumn: [Orden]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Material
+		dataType: string
+		isNameInferred
+		isDataTypeInferred
+		sortByColumn: Orden
+		summarizeBy: none
+		sourceColumn: [Material]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'kg por módulo'
+		dataType: double
+		isNameInferred
+		isDataTypeInferred
+		formatString: #,0.00
+		summarizeBy: sum
+		sourceColumn: [kg por módulo]
+
+		annotation SummarizationSetBy = Automatic
+
+	column '% de la masa'
+		dataType: double
+		isNameInferred
+		isDataTypeInferred
+		formatString: 0.0%
+		summarizeBy: sum
+		sourceColumn: [% de la masa]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Scrap (%)'
+		dataType: double
+		isNameInferred
+		isDataTypeInferred
+		formatString: 0.00%
+		summarizeBy: none
+		sourceColumn: [Scrap (%)]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Entrada (kg/h)'
+		dataType: double
+		isNameInferred
+		isDataTypeInferred
+		formatString: #,0.00
+		summarizeBy: sum
+		sourceColumn: [Entrada (kg/h)]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Entrada (t/año)'
+		dataType: double
+		isNameInferred
+		isDataTypeInferred
+		formatString: #,0.0
+		summarizeBy: sum
+		sourceColumn: [Entrada (t/año)]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Materiales = calculated
+		mode: import
+		source = ```
+			DATATABLE(
+			    "Orden", INTEGER,
+			    "Material", STRING,
+			    "kg por módulo", DOUBLE,
+			    "% de la masa", DOUBLE,
+			    "Scrap (%)", DOUBLE,
+			    "Entrada (kg/h)", DOUBLE,
+			    "Entrada (t/año)", DOUBLE,
+			    {
+			        { 1, "Vidrio templado AR 3,2 mm", 20.7, 0.7392857142857142, 0.005, 629.493464052288, 3852.5 },
+			        { 2, "Marco de aluminio", 2.8, 0.09999999999999999, 0.01, 85.5725006051803, 523.703703703704 },
+			        { 3, "EVA, dos capas", 2.2, 0.07857142857142858, 0.07, 71.2297264584846, 435.925925925926 },
+			        { 4, "Backsheet", 0.9, 0.03214285714285715, 0.07, 29.1394335511983, 178.333333333333 },
+			        { 5, "Celdas M10 PERC", 0.8, 0.028571428571428574, 0.01, 24.4492858871944, 149.62962962963 },
+			        { 6, "Ribbon de cobre", 0.3, 0.010714285714285714, 0.03, 9.35003631082063, 57.2222222222222 },
+			        { 7, "Caja de conexión y silicona", 0.3, 0.010714285714285714, 0.02, 9.25925925925926, 56.6666666666667 },
+			        { 8, "Embalaje", 1.0, 0.03571428571428571, 0.0, 30.2590171871218, 185.185185185185 }
+			    }
+			)
+			```
+
+	annotation PBI_ResultType = Table

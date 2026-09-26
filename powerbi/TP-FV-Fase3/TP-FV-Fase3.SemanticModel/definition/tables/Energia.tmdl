@@ -1,0 +1,136 @@
+table Energia
+
+	column Orden
+		dataType: int64
+		isNameInferred
+		isDataTypeInferred
+		isHidden
+		summarizeBy: none
+		sourceColumn: [Orden]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Equipo o servicio'
+		dataType: string
+		isNameInferred
+		isDataTypeInferred
+		sortByColumn: Orden
+		summarizeBy: none
+		sourceColumn: [Equipo o servicio]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Código Fase 2'
+		dataType: string
+		isNameInferred
+		isDataTypeInferred
+		summarizeBy: none
+		sourceColumn: [Código Fase 2]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Bloque
+		dataType: string
+		isNameInferred
+		isDataTypeInferred
+		summarizeBy: none
+		sourceColumn: [Bloque]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Potencia instalada (kW)'
+		dataType: double
+		isNameInferred
+		isDataTypeInferred
+		formatString: #,0.0
+		summarizeBy: sum
+		sourceColumn: [Potencia instalada (kW)]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Factor de carga'
+		dataType: double
+		isNameInferred
+		isDataTypeInferred
+		formatString: 0.0%
+		summarizeBy: none
+		sourceColumn: [Factor de carga]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Horas de uso (h/día)'
+		dataType: double
+		isNameInferred
+		isDataTypeInferred
+		formatString: #,0.0
+		summarizeBy: none
+		sourceColumn: [Horas de uso (h/día)]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Rendimiento
+		dataType: double
+		isNameInferred
+		isDataTypeInferred
+		formatString: 0.0%
+		summarizeBy: none
+		sourceColumn: [Rendimiento]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Energía de entrada (kWh/día)'
+		dataType: double
+		isNameInferred
+		isDataTypeInferred
+		formatString: #,0.0
+		summarizeBy: sum
+		sourceColumn: [Energía de entrada (kWh/día)]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Energía útil (kWh/día)'
+		dataType: double
+		isNameInferred
+		isDataTypeInferred
+		formatString: #,0.0
+		summarizeBy: sum
+		sourceColumn: [Energía útil (kWh/día)]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Energia = calculated
+		mode: import
+		source = ```
+			DATATABLE(
+			    "Orden", INTEGER,
+			    "Equipo o servicio", STRING,
+			    "Código Fase 2", STRING,
+			    "Bloque", STRING,
+			    "Potencia instalada (kW)", DOUBLE,
+			    "Factor de carga", DOUBLE,
+			    "Horas de uso (h/día)", DOUBLE,
+			    "Rendimiento", DOUBLE,
+			    "Energía de entrada (kWh/día)", DOUBLE,
+			    "Energía útil (kWh/día)", DOUBLE,
+			    {
+			        { 1, "Inspección EL de celdas", "E-101", "Proceso", 3.0, 0.6, 20.4, 0.85, 36.72, 31.212 },
+			        { 2, "Stringer, soldadura de celdas", "E-102", "Proceso", 50.0, 0.615, 20.4, 0.85, 627.3, 533.205 },
+			        { 3, "Lay-up y bussing", "E-103", "Proceso", 8.0, 0.6, 20.4, 0.85, 97.92, 83.232 },
+			        { 4, "Laminadora al vacío", "C-101", "Proceso", 190.0, 0.375, 20.4, 0.3, 1453.5, 436.05 },
+			        { 5, "EL, recorte y curado", "E-101b", "Proceso", 10.0, 0.5, 20.4, 0.85, 102.0, 86.7 },
+			        { 6, "Enmarcado y caja de conexión", "E-104", "Proceso", 10.0, 0.6, 20.4, 0.85, 122.4, 104.04 },
+			        { 7, "Ensayo STC (flash)", "E-105", "Proceso", 5.0, 0.5, 20.4, 0.85, 51.0, 43.35 },
+			        { 8, "Clasificación y binning", "E-106", "Proceso", 6.0, 0.6, 20.4, 0.85, 73.44, 62.424 },
+			        { 9, "Transporte interno y buffers", "—", "Proceso", 15.0, 0.6, 20.4, 0.85, 183.6, 156.06 },
+			        { 10, "Compresor de aire (2 × 30 kW, 1+1)", "K-101", "Auxiliares", 60.0, 0.35, 24.0, 0.15, 504.0, 75.6 },
+			        { 11, "Chiller de agua 12 °C", "E-205", "Auxiliares", 30.0, 0.6, 24.0, 0.8, 432.0, 345.6 },
+			        { 12, "Bomba de vacío (integrada en C-101)", "P-201", "Auxiliares", 0.0, 0.0, 24.0, 0.0, 0.0, 0.0 },
+			        { 13, "Generador de N₂ PSA", "E-201", "Auxiliares", 2.0, 0.8, 24.0, 0.7, 38.4, 26.88 },
+			        { 14, "Extracción de humos", "—", "Auxiliares", 5.5, 0.9, 24.0, 0.8, 118.8, 95.04 },
+			        { 15, "HVAC nave y sala de lay-up", "—", "Auxiliares", 60.0, 0.6, 24.0, 0.9, 864.0, 777.6 },
+			        { 16, "Iluminación y oficinas", "—", "Auxiliares", 25.0, 0.7, 24.0, 0.9, 420.0, 378.0 }
+			    }
+			)
+			```
+
+	annotation PBI_ResultType = Table

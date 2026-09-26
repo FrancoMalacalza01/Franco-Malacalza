@@ -1,0 +1,140 @@
+table _Medidas
+
+	column Value
+		dataType: string
+		isNameInferred
+		isDataTypeInferred
+		isHidden
+		summarizeBy: none
+		sourceColumn: [Value]
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Lee el valor de la tabla Base; editá ahí, no acá.
+	measure 'p Ritmo' = CALCULATE( MAX( Base[Valor] ), REMOVEFILTERS( Base ), Base[Parámetro] = "Producción de diseño (mód/h)" )
+		isHidden
+		displayFolder: 00 Parámetros
+
+	/// Lee el valor de la tabla Base; editá ahí, no acá.
+	measure 'p Horas productivas' = CALCULATE( MAX( Base[Valor] ), REMOVEFILTERS( Base ), Base[Parámetro] = "Horas productivas por día" )
+		isHidden
+		displayFolder: 00 Parámetros
+
+	/// Lee el valor de la tabla Base; editá ahí, no acá.
+	measure 'p Días por año' = CALCULATE( MAX( Base[Valor] ), REMOVEFILTERS( Base ), Base[Parámetro] = "Días productivos por año" )
+		isHidden
+		displayFolder: 00 Parámetros
+
+	/// Lee el valor de la tabla Base; editá ahí, no acá.
+	measure 'p Producción anual t' = CALCULATE( MAX( Base[Valor] ), REMOVEFILTERS( Base ), Base[Parámetro] = "Producción anual (t/año)" )
+		isHidden
+		displayFolder: 00 Parámetros
+
+	/// Lee el valor de la tabla Base; editá ahí, no acá.
+	measure 'p Factor de emisión' = CALCULATE( MAX( Base[Valor] ), REMOVEFILTERS( Base ), Base[Parámetro] = "Factor de emisión de la red (tCO₂/MWh)" )
+		isHidden
+		displayFolder: 00 Parámetros
+
+	/// Lee el valor de la tabla Base; editá ahí, no acá.
+	measure 'p Costo de la energía' = CALCULATE( MAX( Base[Valor] ), REMOVEFILTERS( Base ), Base[Parámetro] = "Costo de la energía (USD/kWh)" )
+		isHidden
+		displayFolder: 00 Parámetros
+
+	/// Suma de potencia de placa. Total planta: 479,5 kW.
+	measure 'Potencia Instalada' = SUM( Energia[Potencia instalada (kW)] )
+		formatString: #,0.0
+		displayFolder: 01 Energía
+
+	/// Energía eléctrica que entra por día.
+	measure 'Energia Entrada' = SUM( Energia[Energía de entrada (kWh/día)] )
+		formatString: #,0
+		displayFolder: 01 Energía
+
+	/// Energía aprovechada tras aplicar el rendimiento de cada equipo.
+	measure 'Energia Util' = SUM( Energia[Energía útil (kWh/día)] )
+		formatString: #,0
+		displayFolder: 01 Energía
+
+	/// Cierre del balance energético: entrada menos útil.
+	measure Perdidas = [Energia Entrada] - [Energia Util]
+		formatString: #,0
+		displayFolder: 01 Energía
+
+	measure 'Eficiencia Global' = DIVIDE( [Energia Util], [Energia Entrada] )
+		formatString: 0.0%
+		displayFolder: 01 Energía
+
+	measure 'Energia Anual MWh' = DIVIDE( [Energia Entrada] * [p Días por año], 1000 )
+		formatString: #,0.0
+		displayFolder: 01 Energía
+
+	measure 'Energia por Modulo' = DIVIDE( [Energia Entrada], [p Ritmo] * [p Horas productivas] )
+		formatString: #,0.00
+		displayFolder: 02 Consumos específicos
+
+	/// kWh por tonelada de producto. Rango guía de la cátedra: 80 a 250.
+	measure 'Energia por Tonelada' = DIVIDE( [Energia Anual MWh] * 1000, [p Producción anual t] )
+		formatString: #,0.0
+		displayFolder: 02 Consumos específicos
+
+	measure 'CO2 Anual' = [Energia Anual MWh] * [p Factor de emisión]
+		formatString: #,0.0
+		displayFolder: 03 Ambiente
+
+	/// kg de CO₂ por tonelada. Rango guía: 100 a 400.
+	measure 'CO2 por Tonelada' = DIVIDE( [CO2 Anual] * 1000, [p Producción anual t] )
+		formatString: #,0.0
+		displayFolder: 03 Ambiente
+
+	measure 'Costo Energetico Anual' = [Energia Anual MWh] * 1000 * [p Costo de la energía]
+		formatString: \$#,0
+		displayFolder: 01 Energía
+
+	/// Ritmo de diseño sobre la menor capacidad nominal de la línea.
+	measure 'Utilizacion Cuello' = DIVIDE( [p Ritmo], MIN( Capacidad[Nominal (mód/h)] ) )
+		formatString: 0.0%
+		displayFolder: 04 Capacidad
+
+	measure 'Capacidad Ociosa' = 1 - [Utilizacion Cuello]
+		formatString: 0.0%
+		displayFolder: 04 Capacidad
+
+	/// Equipo con la menor capacidad nominal de la línea.
+	measure 'Cuello de Botella' = ```
+			VAR _minima = MINX( ALL( Capacidad ), Capacidad[Nominal (mód/h)] )
+			RETURN
+			    CONCATENATEX(
+			        FILTER( ALL( Capacidad ), Capacidad[Nominal (mód/h)] = _minima ),
+			        Capacidad[Equipo],
+			        ", "
+			    )
+			```
+		displayFolder: 04 Capacidad
+
+	/// Variación neta de masa de cada operación; alimenta la cascada.
+	measure 'Neto Etapa' = SUM( Masa[SE AGREGA (kg/h)] ) - SUM( Masa[SE RETIRA (kg/h)] )
+		formatString: #,0.00
+		displayFolder: 05 Masa
+
+	measure 'Scrap Total' = SUM( Masa[SE RETIRA (kg/h)] )
+		formatString: #,0.00
+		displayFolder: 05 Masa
+
+	/// Control del balance: tiene que dar cero en cada operación y en el total.
+	measure 'Diferencia de Cierre' = ```
+			SUMX(
+			    Masa,
+			    Masa[ENTRADA (kg/h)] + Masa[SE AGREGA (kg/h)]
+			        - Masa[SE RETIRA (kg/h)] - Masa[SALIDA (kg/h)]
+			)
+			```
+		formatString: #,0.0000
+		displayFolder: 05 Masa
+
+	partition _Medidas = calculated
+		mode: import
+		source = ```
+			DATATABLE( "Value", STRING, { { "" } } )
+			```
+
+	annotation PBI_ResultType = Table

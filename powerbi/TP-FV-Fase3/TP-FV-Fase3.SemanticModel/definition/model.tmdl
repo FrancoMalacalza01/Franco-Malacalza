@@ -1,0 +1,19 @@
+model Model
+	culture: es-AR
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: es-AR
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation PBI_QueryOrder = []
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table Base
+ref table Masa
+ref table Materiales
+ref table Capacidad
+ref table Energia
+ref table Indicadores
+ref table _Medidas

@@ -1,0 +1,81 @@
+table Base
+
+	column Orden
+		dataType: int64
+		isNameInferred
+		isDataTypeInferred
+		isHidden
+		summarizeBy: none
+		sourceColumn: [Orden]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Parámetro'
+		dataType: string
+		isNameInferred
+		isDataTypeInferred
+		sortByColumn: Orden
+		summarizeBy: none
+		sourceColumn: [Parámetro]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Valor
+		dataType: double
+		isNameInferred
+		isDataTypeInferred
+		formatString: #,0.0000
+		summarizeBy: none
+		sourceColumn: [Valor]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Unidad
+		dataType: string
+		isNameInferred
+		isDataTypeInferred
+		summarizeBy: none
+		sourceColumn: [Unidad]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Fuente
+		dataType: string
+		isNameInferred
+		isDataTypeInferred
+		summarizeBy: none
+		sourceColumn: [Fuente]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Base = calculated
+		mode: import
+		source = ```
+			DATATABLE(
+			    "Orden", INTEGER,
+			    "Parámetro", STRING,
+			    "Valor", DOUBLE,
+			    "Unidad", STRING,
+			    "Fuente", STRING,
+			    {
+			        { 1, "Producción de diseño (mód/h)", 30.2590171871218, "mód/h", "Balance de masa" },
+			        { 2, "Horas productivas por día", 20.4, "h/día", "Balance energético" },
+			        { 3, "Días productivos por año", 300.0, "d/año", "Criterio del grupo" },
+			        { 4, "Horas efectivas por año", 6120.0, "h/año", "Balance de masa" },
+			        { 5, "Factor de simultaneidad", 0.75, "-", "Demanda eléctrica" },
+			        { 6, "Utilización de la línea", 0.85, "-", "Fase 2" },
+			        { 7, "Masa del módulo (kg)", 28.0, "kg/mód", "Ficha JinkoSolar [1]" },
+			        { 8, "Módulos por año", 185185.185185185, "mód/año", "Balance de masa" },
+			        { 9, "Producción anual (t/año)", 5185.18518518519, "t/año", "Consumos específicos" },
+			        { 10, "Capacidad de planta (MWp/año)", 100.0, "MWp/año", "Consigna del TP" },
+			        { 11, "Potencia nominal del módulo (Wp)", 540.0, "Wp", "Ficha JinkoSolar [1]" },
+			        { 12, "Calor específico del módulo (kJ/kg·°C)", 0.9, "kJ/kg·°C", "Balance energético" },
+			        { 13, "Temperatura de laminación (°C)", 145.0, "°C", "Catálogo Ooitech [3]" },
+			        { 14, "Temperatura de ingreso (°C)", 25.0, "°C", "Balance energético" },
+			        { 15, "Factor de emisión de la red (tCO₂/MWh)", 0.35, "tCO₂/MWh", "Secretaría de Energía [10]" },
+			        { 16, "Costo de la energía (USD/kWh)", 0.1, "USD/kWh", "Criterio del grupo" }
+			    }
+			)
+			```
+
+	annotation PBI_ResultType = Table
