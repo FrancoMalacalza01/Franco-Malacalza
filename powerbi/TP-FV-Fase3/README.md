@@ -38,8 +38,9 @@ las celdas amarillas editables de tu Excel.
 
 ### Medidas
 
-19 medidas en `_Medidas`, agrupadas en carpetas: energía, consumos específicos,
-ambiente, capacidad y masa. Diez de ellas existen con el nombre exacto que
+23 medidas en `_Medidas`: 17 visibles, agrupadas en carpetas —energía, consumos
+específicos, ambiente, capacidad y masa— más 6 auxiliares ocultas que leen los
+parámetros de la tabla `Base`. Diez de ellas existen con el nombre exacto que
 reclaman los visuales del tablero original (`Energia Entrada`, `Perdidas`,
 `Utilizacion Cuello`, `CO2 por Tonelada`, `Neto Etapa`, etc. — sin tildes, tal
 como estaban en el `.pbix`).
@@ -99,6 +100,22 @@ reconectarlo, reemplazá la partición calculada por una de Power Query:
 				    Hoja
 				```
 ```
+
+## Si Power BI no abre el proyecto
+
+Si al hacer doble clic en el `.pbip` aparece *Required artifact is missing in
+...definition.pbir*, casi siempre es porque se abrió el archivo **desde adentro
+del ZIP**. El Explorador de Windows extrae a una carpeta temporal únicamente el
+archivo en el que hiciste doble clic, así que el `.pbip` queda sin las carpetas
+`.Report` y `.SemanticModel` al lado y Power BI no las encuentra.
+
+Extraé el ZIP completo a una carpeta real —click derecho, *Extraer todo*— y
+recién entonces abrí el `.pbip` desde ahí.
+
+Si aun así no abre, está la carpeta `plan-b-csv/`: los seis CSV del modelo más
+`medidas-dax.txt` con las 23 medidas listas para pegar. Con eso se rehace el
+modelo a mano en Power BI Desktop en unos diez minutos, sin depender del
+formato PBIP.
 
 ## Estado
 

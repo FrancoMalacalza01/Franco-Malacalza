@@ -1,0 +1,17 @@
+﻿Orden,Equipo o servicio,Código Fase 2,Bloque,Potencia instalada (kW),Factor de carga,Horas de uso (h/día),Rendimiento,Energía de entrada (kWh/día),Energía útil (kWh/día)
+1,Inspección EL de celdas,E-101,Proceso,3,0.6,20.4,0.85,36.72,31.212
+2,"Stringer, soldadura de celdas",E-102,Proceso,50,0.615,20.4,0.85,627.3,533.205
+3,Lay-up y bussing,E-103,Proceso,8,0.6,20.4,0.85,97.92,83.232
+4,Laminadora al vacío,C-101,Proceso,190,0.375,20.4,0.3,1453.5,436.05
+5,"EL, recorte y curado",E-101b,Proceso,10,0.5,20.4,0.85,102,86.7
+6,Enmarcado y caja de conexión,E-104,Proceso,10,0.6,20.4,0.85,122.4,104.04
+7,Ensayo STC (flash),E-105,Proceso,5,0.5,20.4,0.85,51,43.35
+8,Clasificación y binning,E-106,Proceso,6,0.6,20.4,0.85,73.44,62.424
+9,Transporte interno y buffers,—,Proceso,15,0.6,20.4,0.85,183.6,156.06
+10,"Compresor de aire (2 × 30 kW, 1+1)",K-101,Auxiliares,60,0.35,24,0.15,504,75.6
+11,Chiller de agua 12 °C,E-205,Auxiliares,30,0.6,24,0.8,432,345.6
+12,Bomba de vacío (integrada en C-101),P-201,Auxiliares,0,0,24,0,0,0
+13,Generador de N₂ PSA,E-201,Auxiliares,2,0.8,24,0.7,38.4,26.88
+14,Extracción de humos,—,Auxiliares,5.5,0.9,24,0.8,118.8,95.04
+15,HVAC nave y sala de lay-up,—,Auxiliares,60,0.6,24,0.9,864,777.6
+16,Iluminación y oficinas,—,Auxiliares,25,0.7,24,0.9,420,378

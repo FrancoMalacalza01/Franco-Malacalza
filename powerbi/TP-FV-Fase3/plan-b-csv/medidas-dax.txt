@@ -1,0 +1,171 @@
+MEDIDAS DAX — TP Fase 3 · Grupo 9
+========================================================================
+
+Creá una tabla vacía llamada _Medidas y pegá cada medida ahí, una por una.
+Las seis primeras son auxiliares: leen la tabla Base. Crealas primero,
+porque las demás dependen de ellas. Podés ocultarlas al terminar.
+
+------------------------------------------------------------------------
+p Ritmo   [auxiliar, ocultar]
+
+p Ritmo =
+CALCULATE( MAX( Base[Valor] ), REMOVEFILTERS( Base ), Base[Parámetro] = "Producción de diseño (mód/h)" )
+
+------------------------------------------------------------------------
+p Horas productivas   [auxiliar, ocultar]
+
+p Horas productivas =
+CALCULATE( MAX( Base[Valor] ), REMOVEFILTERS( Base ), Base[Parámetro] = "Horas productivas por día" )
+
+------------------------------------------------------------------------
+p Días por año   [auxiliar, ocultar]
+
+p Días por año =
+CALCULATE( MAX( Base[Valor] ), REMOVEFILTERS( Base ), Base[Parámetro] = "Días productivos por año" )
+
+------------------------------------------------------------------------
+p Producción anual t   [auxiliar, ocultar]
+
+p Producción anual t =
+CALCULATE( MAX( Base[Valor] ), REMOVEFILTERS( Base ), Base[Parámetro] = "Producción anual (t/año)" )
+
+------------------------------------------------------------------------
+p Factor de emisión   [auxiliar, ocultar]
+
+p Factor de emisión =
+CALCULATE( MAX( Base[Valor] ), REMOVEFILTERS( Base ), Base[Parámetro] = "Factor de emisión de la red (tCO₂/MWh)" )
+
+------------------------------------------------------------------------
+p Costo de la energía   [auxiliar, ocultar]
+
+p Costo de la energía =
+CALCULATE( MAX( Base[Valor] ), REMOVEFILTERS( Base ), Base[Parámetro] = "Costo de la energía (USD/kWh)" )
+
+------------------------------------------------------------------------
+Potencia Instalada
+formato: #,0.0
+
+Potencia Instalada =
+SUM( Energia[Potencia instalada (kW)] )
+
+------------------------------------------------------------------------
+Energia Entrada
+formato: #,0
+
+Energia Entrada =
+SUM( Energia[Energía de entrada (kWh/día)] )
+
+------------------------------------------------------------------------
+Energia Util
+formato: #,0
+
+Energia Util =
+SUM( Energia[Energía útil (kWh/día)] )
+
+------------------------------------------------------------------------
+Perdidas
+formato: #,0
+
+Perdidas =
+[Energia Entrada] - [Energia Util]
+
+------------------------------------------------------------------------
+Eficiencia Global
+formato: 0.0%
+
+Eficiencia Global =
+DIVIDE( [Energia Util], [Energia Entrada] )
+
+------------------------------------------------------------------------
+Energia Anual MWh
+formato: #,0.0
+
+Energia Anual MWh =
+DIVIDE( [Energia Entrada] * [p Días por año], 1000 )
+
+------------------------------------------------------------------------
+Energia por Modulo
+formato: #,0.00
+
+Energia por Modulo =
+DIVIDE( [Energia Entrada], [p Ritmo] * [p Horas productivas] )
+
+------------------------------------------------------------------------
+Energia por Tonelada
+formato: #,0.0
+
+Energia por Tonelada =
+DIVIDE( [Energia Anual MWh] * 1000, [p Producción anual t] )
+
+------------------------------------------------------------------------
+CO2 Anual
+formato: #,0.0
+
+CO2 Anual =
+[Energia Anual MWh] * [p Factor de emisión]
+
+------------------------------------------------------------------------
+CO2 por Tonelada
+formato: #,0.0
+
+CO2 por Tonelada =
+DIVIDE( [CO2 Anual] * 1000, [p Producción anual t] )
+
+------------------------------------------------------------------------
+Costo Energetico Anual
+formato: \$#,0
+
+Costo Energetico Anual =
+[Energia Anual MWh] * 1000 * [p Costo de la energía]
+
+------------------------------------------------------------------------
+Utilizacion Cuello
+formato: 0.0%
+
+Utilizacion Cuello =
+DIVIDE( [p Ritmo], MIN( Capacidad[Nominal (mód/h)] ) )
+
+------------------------------------------------------------------------
+Capacidad Ociosa
+formato: 0.0%
+
+Capacidad Ociosa =
+1 - [Utilizacion Cuello]
+
+------------------------------------------------------------------------
+Cuello de Botella
+
+Cuello de Botella =
+VAR _minima = MINX( ALL( Capacidad ), Capacidad[Nominal (mód/h)] )
+RETURN
+    CONCATENATEX(
+        FILTER( ALL( Capacidad ), Capacidad[Nominal (mód/h)] = _minima ),
+        Capacidad[Equipo],
+        ", "
+    )
+
+------------------------------------------------------------------------
+Neto Etapa
+formato: #,0.00
+
+Neto Etapa =
+SUM( Masa[SE AGREGA (kg/h)] ) - SUM( Masa[SE RETIRA (kg/h)] )
+
+------------------------------------------------------------------------
+Scrap Total
+formato: #,0.00
+
+Scrap Total =
+SUM( Masa[SE RETIRA (kg/h)] )
+
+------------------------------------------------------------------------
+Diferencia de Cierre
+formato: #,0.0000
+
+Diferencia de Cierre =
+SUMX(
+    Masa,
+    Masa[ENTRADA (kg/h)] + Masa[SE AGREGA (kg/h)]
+        - Masa[SE RETIRA (kg/h)] - Masa[SALIDA (kg/h)]
+)
+
