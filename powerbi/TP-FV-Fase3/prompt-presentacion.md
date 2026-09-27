@@ -36,7 +36,7 @@ Continuidad con la Fase 2 del grupo y con el tablero de Power BI del proyecto.
 | Reglas y bordes finos                | `#DCDBD7` |
 | Ámbar, sólo para lo que está fuera de rango | `#D9912B` |
 
-Formato 16:9. Tipografía sans serif humanista de una sola familia, tipo Calibri, en regular y negrita. El ámbar aparece como máximo en dos diapositivas: es la señal de "esto está fuera del rango guía" y pierde fuerza si se usa de adorno.
+Formato 16:9. Tipografía sans serif humanista de una sola familia, tipo Calibri, en regular y negrita. El ámbar aparece como máximo en dos diapositivas: es la señal de "esto está fuera del rango de referencia" y pierde fuerza si se usa de adorno.
 
 Nada de imágenes decorativas, íconos genéricos ni fotos de stock. Si una diapositiva necesita una figura, que sea un diagrama del proceso o un gráfico de datos.
 
@@ -79,7 +79,7 @@ Para la diapositiva del proceso, reutilizá el recurso gráfico de la Fase 2: bl
 
 **1. Portada.** Fondo `#12283A`. Ojal `• TRABAJO PRÁCTICO ANUAL / INSTALACIONES INDUSTRIALES · 2026`, línea `UTN · Facultad Regional La Plata`, antetítulo `FASE 3 · CONSUMOS ESPECÍFICOS`, título grande *Planta de módulos fotovoltaicos PERC* con la última palabra en verde itálica, subtítulo `Módulo de 540 Wp · Capacidad 100 MWp/año`, bajada `Consumos específicos, efluentes y balances de materia y energía`. Abajo, cinco espacios numerados 01 a 05 para los integrantes, y al pie docente y fecha de exposición. A la derecha, una retícula abstracta de celdas fotovoltaicas con dos celdas en verde.
 
-**2. Hoja de ruta.** Las seis preguntas que responde la exposición, numeradas 01 a 06: qué producimos y a qué ritmo; si el mercado lo absorbe; si la línea da la capacidad; si cierra la materia; si cierra la energía; cómo queda frente a los rangos de la cátedra.
+**2. Hoja de ruta.** Las seis preguntas que responde la exposición, numeradas 01 a 06: qué producimos y a qué ritmo; si el mercado lo absorbe; si la línea da la capacidad; si cierra la materia; si cierra la energía; cómo queda frente a los rangos de referencia.
 
 **3. Producto y proceso.** El módulo: PERC, 540 Wp, 144 medias celdas M10, 2.278 × 1.134 × 35 mm, 28 kg, eficiencia 20,94 %, vidrio templado AR 3,2 mm [1]. Y las siete operaciones con el recurso gráfico de la Fase 2: Recepción e inspección EL (E-101) → Soldadura de celdas (PRO-01 · E-102) → Apilado del sándwich (PRO-02 · E-103) → Laminado al vacío (PRO-03 · C-101) → Marco y caja de conexión (PRO-04 · E-104) → Ensayo STC y control final (RED-01 · E-105) → Clasificación y empaque (RED-02 · E-106). C-101 en ámbar: es el cuello de botella y vuelve a aparecer.
 
@@ -99,7 +99,7 @@ Para la diapositiva del proceso, reutilizá el recurso gráfico de la Fase 2: bl
 
 **11. Balance por operación.** Tabla 6.2, las nueve operaciones en kg/h. De 24,45 kg/h de celdas a **847,25 kg/h** de módulo terminado, 877,51 con embalaje. El salto está en el apilado, donde entran 729,86 kg/h. Dos tarjetas: el laminado no pierde masa porque el EVA reticula sin desprender material; el 2 % de rechazo del flash vuelve a reproceso y no es pérdida de masa.
 
-**12. Cierre global.** Patrón A con dos columnas enfrentadas: ocho entradas y siete salidas, ambas **888,75 kg/h** y **5.439,17 t/año**. Diferencia **0,00 kg/h**, cierre **100,00 %** contra el criterio de 98 a 102 % de la guía. Scrap de proceso 11,24 kg/h, 69 t/año, 1,3 % sobre la masa de producto.
+**12. Cierre global.** Patrón A con dos columnas enfrentadas: ocho entradas y siete salidas, ambas **888,75 kg/h** y **5.439,17 t/año**. Diferencia **0,00 kg/h**, cierre **100,00 %** contra el criterio de cierre de 98 a 102 %. Scrap de proceso 11,24 kg/h, 69 t/año, 1,3 % sobre la masa de producto.
 
 **13. Balance eléctrico.** Patrón B, barras rankeadas de kWh/día por equipo, separando proceso de auxiliares. Proceso 297 kW y 2.747,88 kWh/día; con auxiliares **479,5 kW** y **5.125,08 kWh/día**. Franja: los factores de carga del stringer y de la laminadora se eligieron para que el consumo medio coincida con el de catálogo, 41 sobre 50 kW y 95 sobre 190 kW [2][3].
 
@@ -111,7 +111,7 @@ Para la diapositiva del proceso, reutilizá el recurso gráfico de la Fase 2: bl
 
 **17. Efluentes, residuos y emisiones.** Efluente 2.106 m³/año, 90 % del agua consumida, 0,41 m³/t, DQO 500 mg/L, carga 0,20 kg/t, cloacal asimilable. Residuos, Tabla 9.1: vidrio roto 19,3 t/año reciclable; rebaba de EVA y backsheet 40,5 t/año residuo especial; recorte de marco y silicona 6,3; celdas rotas 1,5 a gestor autorizado por su contenido de plata; recorte de ribbon 1,7 de cobre reciclable; embalaje 185, que sale con el producto. Emisiones indirectas: 0,35 tCO₂/MWh → **538 t CO₂/año**, 103,8 kg/t, 5,4 t/MWp.
 
-**18. Indicadores frente a los rangos de la cátedra.** La diapositiva más importante. Tabla 10.1 con semáforo: energía por tonelada 296,52 kWh/t contra 80-250, **por encima**, en ámbar; agua 0,45 m³/t contra 0,5-2,5, apenas por debajo; efluente 0,41 m³/t contra 0,4-2,0, dentro; DQO 0,20 kg/t contra 1-10, por debajo; CO₂ 103,8 kg/t contra 100-400, dentro. Franja: anticipar la pregunta sobre el único indicador fuera de rango con la justificación del informe —es un ensamble y no una transformación química, con un producto liviano y voluminoso donde pesan el HVAC y el laminado.
+**18. Indicadores frente a los rangos de referencia.** La diapositiva más importante. Tabla 10.1 con semáforo: energía por tonelada 296,52 kWh/t contra 80-250, **por encima**, en ámbar; agua 0,45 m³/t contra 0,5-2,5, apenas por debajo; efluente 0,41 m³/t contra 0,4-2,0, dentro; DQO 0,20 kg/t contra 1-10, por debajo; CO₂ 103,8 kg/t contra 100-400, dentro. Franja: anticipar la pregunta sobre el único indicador fuera de rango con la justificación del informe —es un ensamble y no una transformación química, con un producto liviano y voluminoso donde pesan el HVAC y el laminado.
 
 **19 y 20. Tablero de Power BI.** Dos diapositivas con capturas del tablero construido sobre estos balances. La primera muestra la vista general —tarjetas de utilización del cuello, energía por tonelada, energía anual, potencia instalada, CO₂ por tonelada y eficiencia global— y la segunda, el detalle de la cascada del balance de masa y el consumo por equipo. Dejá el espacio de la imagen marcado: las capturas las pega el grupo. Al pie, que el tablero lee el mismo Excel de los balances, de modo que cualquier cambio de supuesto se propaga solo.
 
