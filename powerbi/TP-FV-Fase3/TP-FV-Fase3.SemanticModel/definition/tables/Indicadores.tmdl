@@ -39,12 +39,12 @@ table Indicadores
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'Rango guía'
+	column 'Base de cálculo'
 		dataType: string
 		isNameInferred
 		isDataTypeInferred
 		summarizeBy: none
-		sourceColumn: [Rango guía]
+		sourceColumn: [Base de cálculo]
 
 		annotation SummarizationSetBy = Automatic
 
@@ -65,26 +65,26 @@ table Indicadores
 			    "KPI", STRING,
 			    "Valor", DOUBLE,
 			    "Unidad", STRING,
-			    "Rango guía", STRING,
+			    "Base de cálculo", STRING,
 			    "Lectura", STRING,
 			    {
-			        { 1, "Módulos por año", 185185.185185185, "mód/año", "—", "Capacidad de 100 MWp con módulos de 540 Wp" },
-			        { 2, "Ritmo de línea", 30.2590171871218, "mód/h", "—", "Base del dimensionamiento" },
-			        { 3, "Producción anual", 5185.18518518519, "t/año", "—", "185.185 módulos de 28 kg" },
-			        { 4, "Potencia instalada", 479.5, "kW", "—", "Suma de placa del balance eléctrico" },
-			        { 5, "Demanda máxima estimada", 359.625, "kW", "—", "Factor de simultaneidad 0,75" },
-			        { 6, "Energía anual", 1537.524, "MWh/año", "—", "Proceso más servicios auxiliares" },
-			        { 7, "Energía por módulo", 8.3026296, "kWh/mód", "—", "Indicador propio de la industria fotovoltaica" },
-			        { 8, "Energía por tonelada", 296.522485714286, "kWh/t", "80 - 250", "Por encima: producto liviano con mucho HVAC y laminado" },
-			        { 9, "Energía por MWp", 15.37524, "MWh/MWp", "—", "Permite comparar con otras plantas de módulos" },
-			        { 10, "Agua total", 2340.0, "m³/año", "—", "Sanitario, reposición y limpieza" },
-			        { 11, "Agua por tonelada", 0.451285714285714, "m³/t", "0,5 - 2,5", "Apenas por debajo: no hay agua de proceso" },
-			        { 12, "Efluente por tonelada", 0.406157142857143, "m³/t", "0,4 - 2,0", "Dentro del rango; cloacal asimilable" },
-			        { 13, "DQO por tonelada", 0.203078571428571, "kg/t", "1 - 10", "Por debajo: sin carga orgánica de proceso" },
-			        { 14, "Emisiones de CO₂", 538.1334, "t CO₂/año", "—", "Consumo eléctrico × factor de red" },
-			        { 15, "CO₂ por tonelada", 103.78287, "kg CO₂/t", "100 - 400", "Dentro del rango" },
-			        { 16, "Scrap sobre producto", 0.0132678571428572, "-", "—", "Vidrio roto, rebaba, recortes y celdas rotas" },
-			        { 17, "Utilización del cuello de botella", 0.840528255197827, "-", "—", "Laminadora C-101" }
+			        { 1, "Módulos por año", 185185.185185185, "mód/año", "100 MWp ÷ 540 Wp", "Capacidad de 100 MWp con módulos de 540 Wp" },
+			        { 2, "Ritmo de línea", 30.2590171871218, "mód/h", "mód/año ÷ 6.120 h", "Base del dimensionamiento" },
+			        { 3, "Producción anual", 5185.18518518519, "t/año", "185.185 mód × 28 kg", "185.185 módulos de 28 kg" },
+			        { 4, "Potencia instalada", 479.5, "kW", "suma de placa de equipos", "Suma de placa del balance eléctrico" },
+			        { 5, "Demanda máxima estimada", 359.625, "kW", "instalada × 0,75", "Factor de simultaneidad 0,75" },
+			        { 6, "Energía anual", 1537.524, "MWh/año", "kWh/día × 300 días", "Proceso más servicios auxiliares" },
+			        { 7, "Energía por módulo", 8.3026296, "kWh/mód", "MWh/año ÷ mód/año", "Indicador propio de la industria fotovoltaica" },
+			        { 8, "Energía por tonelada", 296.522485714286, "kWh/t", "MWh/año ÷ t/año", "Producto liviano, con peso de HVAC y laminado; 15,38 MWh/MWp" },
+			        { 9, "Energía por MWp", 15.37524, "MWh/MWp", "MWh/año ÷ 100 MWp", "Permite comparar con otras plantas de módulos" },
+			        { 10, "Agua total", 2340.0, "m³/año", "(sanitario + reposición) × días", "Sanitario, reposición y limpieza" },
+			        { 11, "Agua por tonelada", 0.451285714285714, "m³/t", "m³/año ÷ t/año", "Bajo: no hay agua de proceso" },
+			        { 12, "Efluente por tonelada", 0.406157142857143, "m³/t", "agua × 90 % ÷ t/año", "Cloacal asimilable" },
+			        { 13, "DQO por tonelada", 0.203078571428571, "kg/t", "DQO × efluente ÷ t/año", "Sin carga orgánica de proceso" },
+			        { 14, "Emisiones de CO₂", 538.1334, "t CO₂/año", "MWh/año × factor de red", "Consumo eléctrico × factor de red" },
+			        { 15, "CO₂ por tonelada", 103.78287, "kg CO₂/t", "t CO₂/año ÷ t/año", "Emisión indirecta por consumo eléctrico" },
+			        { 16, "Scrap sobre producto", 0.0132678571428572, "-", "scrap ÷ masa de producto", "Vidrio roto, rebaba, recortes y celdas rotas" },
+			        { 17, "Utilización del cuello de botella", 0.840528255197827, "-", "ritmo ÷ capacidad nominal", "Laminadora C-101" }
 			    }
 			)
 			```
